@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <MainFeed />
+    <MainFeed :page="page1.data" />
   </div>
 </template>
 
