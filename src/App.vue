@@ -1,17 +1,34 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <MainFeed />
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import MainFeed from './components/MainFeed.vue'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    MainFeed
+  },
+  data: () => ({
+    page1: {},
+    page2: {},
+  }),
+  mounted () {
+
+    fetch(`https://ludimos-videos-dev.s3.eu-central-1.amazonaws.com/test_jsons/feed_page_1.json`)
+      .then(response => response.json())
+      .then(json => {
+        this.page1 = json;
+      });
+
+    fetch(`https://ludimos-videos-dev.s3.eu-central-1.amazonaws.com/test_jsons/feed_page_2.json`)
+      .then(response => response.json())
+      .then(json => {
+        this.page2 = json;
+      });
   }
 }
 </script>
