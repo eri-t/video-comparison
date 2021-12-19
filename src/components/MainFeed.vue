@@ -57,12 +57,7 @@
 
             <div v-if="toggleCheckboxes" class="card-footer">
               <b-field class="card-footer-item">
-                <b-checkbox
-                  v-model="selected"
-                  :native-value="props.row.id"
-                  :disabled="
-                    selected.length >= 2 && selected.indexOf(props.row.id) == -1
-                  "
+                <b-checkbox v-model="selectedVideos" :native-value="props.row"
                   >Compare</b-checkbox
                 >
               </b-field>
@@ -79,7 +74,7 @@
       full-screen
       :can-cancel="false"
     >
-      <comparison-modal></comparison-modal>
+      <comparison-modal :selected-videos="selectedVideos"></comparison-modal>
     </b-modal>
   </section>
 </template>
@@ -98,15 +93,24 @@ export default {
   data () {
     return {
       toggleCheckboxes: false,
-      selected: [],
+      selectedVideos: [],
       isComponentModalActive: false,
-
     }
   },
   watch: {
-    selected (newValue) {
+    selectedVideos (newValue) {
       if (newValue.length == 2) {
         this.isComponentModalActive = true;
+      }
+    },
+    toggleCheckboxes (newValue) {
+      if (newValue === false) {
+        this.selectedVideos = [];
+      }
+    },
+    isComponentModalActive (newValue) {
+      if (newValue === false) {
+        this.selectedVideos = [];
       }
     }
   },
