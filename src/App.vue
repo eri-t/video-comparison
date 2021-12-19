@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <MainFeed :page="page1.data" />
+    <MainFeed :videos="videos" />
   </div>
 </template>
 
@@ -13,22 +13,46 @@ export default {
     MainFeed
   },
   data: () => ({
-    page1: {},
-    page2: {},
+    pages: [],
+    page0: '',
   }),
-  mounted () {
+  computed: {
+    videos: function () {
+      let videosList = []
+      this.pages.forEach(page => {
+
+        videosList.push(...page.data);
+      });
+      return videosList;
+    }
+  },
+  beforeCreate () {
 
     fetch(`https://ludimos-videos-dev.s3.eu-central-1.amazonaws.com/test_jsons/feed_page_1.json`)
       .then(response => response.json())
       .then(json => {
-        this.page1 = json;
+        this.pages.push(json);
       });
 
-    fetch(`https://ludimos-videos-dev.s3.eu-central-1.amazonaws.com/test_jsons/feed_page_2.json`)
-      .then(response => response.json())
-      .then(json => {
-        this.page2 = json;
-      });
+  },
+  mounted () {
+
+
+
+  },
+  methods: {
+    isScrolledIntoView (el) {
+      let rect = el.getBoundingClientRect();
+      let elemTop = rect.top;
+      let elemBottom = rect.bottom;
+
+      // Only completely visible elements return true:
+      let isVisible = (elemTop >= 0) && (elemBottom <= window.innerHeight);
+      // Partially visible elements return true:
+      // let isVisible = elemTop < window.innerHeight && elemBottom >= 0;
+      // console.log(isVisible);
+      return isVisible;
+    }
   }
 }
 </script>

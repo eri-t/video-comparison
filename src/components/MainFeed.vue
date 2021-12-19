@@ -8,43 +8,51 @@
         </div>
       </section>
 
-      <div v-for="(video, index) in page" :key="index">
-        <div class="card mb-2">
-          <header class="card-content">
-            <div class="media">
-              <div class="media-left">
-                <figure class="image is-48x48">
-                  <img :src="video.user.profile_pic" alt="Placeholder image" />
-                </figure>
+      <b-table :data="videos" class="border-none" :mobile-cards="false">
+        <b-table-column v-slot="props">
+          <div class="card mb-2 mw-350">
+            <header class="card-content">
+              <div class="media">
+                <div class="media-left">
+                  <figure class="image is-48x48">
+                    <img
+                      :src="props.row.user.profile_pic"
+                      alt="Placeholder image"
+                    />
+                  </figure>
+                </div>
+                <div class="media-content">
+                  <p class="title is-4">
+                    {{
+                      props.row.user.firstname + " " + props.row.user.lastname
+                    }}
+                  </p>
+                  <p class="subtitle is-6">Team: {{ props.row.team.name }}</p>
+                </div>
               </div>
-              <div class="media-content">
-                <p class="title is-4">
-                  {{ video.user.firstname + " " + video.user.lastname }}
-                </p>
-                <p class="subtitle is-6">Team: {{ video.team.name }}</p>
+            </header>
+
+            <div class="card-image">
+              <figure class="image is-4by3">
+                <img :src="props.row.thumbnail_url" alt="Placeholder image" />
+              </figure>
+            </div>
+
+            <div class="card-content">
+              <div class="content">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                Phasellus nec iaculis mauris. <a>@bulmaio</a>.
+                <a href="#">#css</a>
+                <a href="#">#responsive</a>
+                <br />
+                <time datetime="2016-1-1">{{
+                  formatDate(props.row.created_at)
+                }}</time>
               </div>
             </div>
-          </header>
-
-          <div class="card-image">
-            <figure class="image is-4by3">
-              <img :src="video.thumbnail_url" alt="Placeholder image" />
-            </figure>
           </div>
-
-          <div class="card-content">
-            <div class="content">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus
-              nec iaculis mauris. <a>@bulmaio</a>. <a href="#">#css</a>
-              <a href="#">#responsive</a>
-              <br />
-              <time datetime="2016-1-1">{{
-                formatDate(video.created_at)
-              }}</time>
-            </div>
-          </div>
-        </div>
-      </div>
+        </b-table-column>
+      </b-table>
     </div>
   </section>
 </template>
@@ -53,7 +61,16 @@
 export default {
   name: 'MainFeed',
   props: {
-    page: Array,
+    videos: Array,
+  },
+  data () {
+    return {
+      columns: [
+        {
+          field: 'id',
+          label: 'ID',
+        }]
+    }
   },
   methods: {
     formatDate (text) {
@@ -112,9 +129,13 @@ export default {
 }
 </script>
 
-<style scoped>
-.card.mb-2 {
+<style>
+.card.mw-350 {
   max-width: 350px;
   margin: auto;
+}
+.border-none .table td,
+.border-none .table th {
+  border: none;
 }
 </style>
