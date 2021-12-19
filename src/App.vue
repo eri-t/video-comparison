@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <MainFeed :videos="videos" />
+    <MainFeed :videos="videos" @addPage="loadAsyncData" />
   </div>
 </template>
 
@@ -14,44 +14,36 @@ export default {
   },
   data: () => ({
     pages: [],
-    page0: '',
+    page: 0
   }),
   computed: {
     videos: function () {
       let videosList = []
       this.pages.forEach(page => {
-
         videosList.push(...page.data);
       });
       return videosList;
     }
   },
-  beforeCreate () {
 
-    fetch(`https://ludimos-videos-dev.s3.eu-central-1.amazonaws.com/test_jsons/feed_page_1.json`)
-      .then(response => response.json())
-      .then(json => {
-        this.pages.push(json);
-      });
-
-  },
-  mounted () {
-
-
-
-  },
   methods: {
-    isScrolledIntoView (el) {
-      let rect = el.getBoundingClientRect();
-      let elemTop = rect.top;
-      let elemBottom = rect.bottom;
-
-      // Only completely visible elements return true:
-      let isVisible = (elemTop >= 0) && (elemBottom <= window.innerHeight);
-      // Partially visible elements return true:
-      // let isVisible = elemTop < window.innerHeight && elemBottom >= 0;
-      // console.log(isVisible);
-      return isVisible;
+    loadAsyncData () {
+      this.page++;
+      if (this.page > 2) {
+        // endpoint for page 3 does not exist
+        return;
+      }
+      //  this.loading = true
+      fetch(`https://ludimos-videos-dev.s3.eu-central-1.amazonaws.com/test_jsons/feed_page_` + this.page + `.json`)
+        .then(response => response.json())
+        .then(json => {
+          this.pages.push(json);
+          this.page = json.page;
+        })
+        .catch((error) => {
+          // this.loading = false
+          throw error
+        })
     }
   }
 }

@@ -53,6 +53,7 @@
           </div>
         </b-table-column>
       </b-table>
+      <div ref="end"></div>
     </div>
   </section>
 </template>
@@ -61,15 +62,11 @@
 export default {
   name: 'MainFeed',
   props: {
-    videos: Array,
+    videos: Array
   },
   data () {
     return {
-      columns: [
-        {
-          field: 'id',
-          label: 'ID',
-        }]
+
     }
   },
   methods: {
@@ -124,8 +121,18 @@ export default {
         }
       ];
       return (months[(Number(monthNumber) - 1)].text);
-    }
+    },
+  },
+  mounted () {
+    this.observer = new IntersectionObserver(entries => {
+      if (entries[0].intersectionRatio > 0) {
+        this.$emit('addPage');
+      }
+    });
+
+    this.observer.observe(this.$refs.end);
   }
+
 }
 </script>
 
