@@ -1,10 +1,19 @@
 <template>
-  <section class="section">
-    <div class="container">
+  <section class="section pt-0 px-0">
+    <div class="container is-fullhd is-flex is-justify-content-end">
+      <b-button
+        :type="toggleCheckboxes ? 'is-warning' : 'is-success'"
+        class="m-3 compare-btn"
+        @click="toggleCheckboxes = !toggleCheckboxes"
+        >{{
+          this.toggleCheckboxes ? "Hide Checkboxes" : "Compare Videos"
+        }}</b-button
+      >
+    </div>
+    <div class="container is-fullhd">
       <section class="hero is-primary mb-3">
         <div class="hero-body">
           <p class="title">Video List</p>
-          <p class="subtitle">Primary subtitle</p>
         </div>
       </section>
 
@@ -40,33 +49,65 @@
 
             <div class="card-content">
               <div class="content">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                Phasellus nec iaculis mauris. <a>@bulmaio</a>.
-                <a href="#">#css</a>
-                <a href="#">#responsive</a>
-                <br />
                 <time datetime="2016-1-1">{{
                   formatDate(props.row.created_at)
                 }}</time>
               </div>
+            </div>
+
+            <div v-if="toggleCheckboxes" class="card-footer">
+              <b-field class="card-footer-item">
+                <b-checkbox
+                  v-model="selected"
+                  :native-value="props.row.id"
+                  :disabled="
+                    selected.length >= 2 && selected.indexOf(props.row.id) == -1
+                  "
+                  >Compare</b-checkbox
+                >
+              </b-field>
             </div>
           </div>
         </b-table-column>
       </b-table>
       <div ref="end"></div>
     </div>
+
+    <b-modal
+      v-model="isComponentModalActive"
+      has-modal-card
+      full-screen
+      :can-cancel="false"
+    >
+      <comparison-modal></comparison-modal>
+    </b-modal>
   </section>
 </template>
 
 <script>
+import ComparisonModal from './ComparisonModal.vue'
+
 export default {
   name: 'MainFeed',
   props: {
     videos: Array
   },
+  components: {
+    ComparisonModal
+  },
   data () {
     return {
+      toggleCheckboxes: false,
+      selected: [],
+      isComponentModalActive: false,
 
+    }
+  },
+  watch: {
+    selected (newValue) {
+      if (newValue.length == 2) {
+        this.isComponentModalActive = true;
+      }
     }
   },
   methods: {
@@ -122,6 +163,7 @@ export default {
       ];
       return (months[(Number(monthNumber) - 1)].text);
     },
+
   },
   mounted () {
     this.observer = new IntersectionObserver(entries => {
@@ -132,7 +174,6 @@ export default {
 
     this.observer.observe(this.$refs.end);
   }
-
 }
 </script>
 
@@ -141,8 +182,14 @@ export default {
   max-width: 350px;
   margin: auto;
 }
+
 .border-none .table td,
 .border-none .table th {
   border: none;
+}
+
+.compare-btn {
+  position: fixed;
+  z-index: 1;
 }
 </style>
