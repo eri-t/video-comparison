@@ -116,58 +116,8 @@ export default {
   },
   methods: {
     formatDate (text) {
-      // 11:09 PM - 1 Jan 2016
-      // 2021-02-01T14:49:50.631Z
-      let auxArr = text.split("T");
-      let date = auxArr[0];
-      date = date.split("-");
-      date = date[2] + ' ' + this.getMonthLabel(date[1]) + ' ' + date[0];
-
-      let time = auxArr[1].split(".")[0];
-      return (time + ' - ' + date);
+      return new Date(text).toUTCString();
     },
-    getMonthLabel (monthNumber) {
-      let months = [
-        {
-          number: '1', text: 'Jan'
-        },
-        {
-          number: '2', text: 'Feb'
-        },
-        {
-          number: '3', text: 'Mar'
-        },
-        {
-          number: '4', text: 'Apr'
-        },
-        {
-          number: '5', text: 'May'
-        },
-        {
-          number: '6', text: 'Jun'
-        },
-        {
-          number: '7', text: 'Jul'
-        },
-        {
-          number: '8', text: 'Aug'
-        },
-        {
-          number: '9', text: 'Sep'
-        },
-        {
-          number: '10', text: 'Oct'
-        },
-        {
-          number: '11', text: 'Nov'
-        },
-        {
-          number: '12', text: 'Dec'
-        }
-      ];
-      return (months[(Number(monthNumber) - 1)].text);
-    },
-
   },
   mounted () {
     this.observer = new IntersectionObserver(entries => {
