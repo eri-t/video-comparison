@@ -1,8 +1,8 @@
 <template>
   <section class="section pt-0 px-0">
-    <div class="container is-fullhd is-flex is-justify-content-end">
+    <div class="container is-fullhd pr-2 is-flex is-justify-content-flex-end">
       <b-button
-        :type="toggleCheckboxes ? 'is-warning' : 'is-success'"
+        :type="toggleCheckboxes ? 'is-light' : 'is-primary is-light'"
         class="m-3 compare-btn"
         @click="toggleCheckboxes = !toggleCheckboxes"
         >{{

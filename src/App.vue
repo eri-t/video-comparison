@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <b-loading v-model="isLoading"></b-loading>
     <MainFeed :videos="videos" @addPage="loadAsyncData" />
   </div>
 </template>
@@ -12,10 +13,13 @@ export default {
   components: {
     MainFeed
   },
+
   data: () => ({
     pages: [],
-    page: 0
+    page: 0,
+    isLoading: false
   }),
+
   computed: {
     videos: function () {
       let videosList = []
@@ -33,16 +37,18 @@ export default {
         // endpoint for page 3 does not exist
         return;
       }
-      //  this.loading = true
+
+      this.isLoading = true;
       fetch(`https://ludimos-videos-dev.s3.eu-central-1.amazonaws.com/test_jsons/feed_page_` + this.page + `.json`)
         .then(response => response.json())
         .then(json => {
           this.pages.push(json);
           this.page = json.page;
+          this.isLoading = false;
         })
         .catch((error) => {
-          // this.loading = false
-          throw error
+          this.isLoading = false;
+          throw error;
         })
     }
   }
